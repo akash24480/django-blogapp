@@ -1,0 +1,129 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="page-container">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} text-success">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header border-bottom border-dashed d-flex align-items-center">
+                    <button class="btn btn-primary flex gap-1" data-bs-toggle="modal" data-bs-target="#signup-modal">Create New <i class="ri-edit-line"></i></button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Title</th>
+                                    <th scope="col">Short Description</th>
+                                    <th scope="col">Content</th>
+                                    <th scope="col">Image</th>
+                                    <th scope="col">Created At</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for blog in blogs %}
+                                <tr>
+                                    <th scope="row">{{ blog.id }}</th>  <!-- Blog ID -->
+                                    <td>{{ blog.title }}</td>  <!-- Blog Title -->
+                                    <td>{{ blog.short_description }}</td>  <!-- Short Description -->
+                                    <td>{{ blog.content }}</td>
+                                    <td>
+                                        <img src="{{ blog.image.url }}" alt="Blog Image" width="50">  <!-- Image -->
+                                    </td>
+                                    <td>{{ blog.created_at|date:"Y-m-d H:i" }}</td>  <!-- Date -->
+                                    <td>
+                                        <a href="{% url 'login'  %}" class="btn btn-sm btn-primary">Edit</a>
+                                        <a href="{% url 'login' %}" class="btn btn-sm btn-danger">Delete</a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="7" class="text-center">No blogs found.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div> <!-- end table-responsive-->
+                </div> <!-- end card body-->
+            </div> <!-- end card -->
+        </div><!-- end col-->
+    </div>
+</div>
+
+<div id="signup-modal" class="modal fade" tabindex="-1" role="dialog"
+                                    aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+
+
+
+                                            <div class="modal-body">
+                                                <div class="auth-brand text-center mt-2 mb-4 position-relative top-0">
+                                                    <a href="index.html" class="logo-dark">
+                                                        <span><img src="{% static 'assets/dashboard/images/logo-dark.png' %}" alt="dark logo"
+                                                                height="22"></span>
+                                                    </a>
+                                                    <a href="index.html" class="logo-light">
+                                                        <span><img src="{% static 'assets/dashboard/images/logo.png' %}" alt="logo"
+                                                                height="22"></span>
+                                                    </a>
+                                                </div>
+
+                                                {% if messages %}
+                                                {% for message in messages %}
+                                                <div class="alert alert-{{ message.tags }} text-success">{{ message }}</div>
+                                                {% endfor %}
+                                                {% endif %}
+
+                                                <form class="ps-3 pe-3" method="POST" enctype="multipart/form-data">
+                                                    {% csrf_token %}
+
+                                                    <div class="mb-3">
+                                                        <label for="username" class="form-label">Title</label>
+                                                        <input class="form-control" type="text" id="title"
+                                                            required name="title" placeholder="Title">
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label for="emailaddress" class="form-label">Short Description</label>
+                                                        <input class="form-control" type="text" id="short_description"
+                                                            required name="short_description" placeholder="Short Description">
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label for="emailaddress" class="form-label">Image</label>
+                                                        <input class="form-control" type="file" id="image"
+                                                            required name="image">
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label for="password" class="form-label">Content</label>
+                                                        <textarea class="form-control" type="password" required
+                                                            id="content" name="content" placeholder="Content">
+                                                        </textarea>
+                                                    </div>
+
+                                                    
+
+                                                    <div class="mb-3 text-center">
+                                                        <button class="btn btn-primary" type="submit">Create</button>
+                                                    </div>
+
+                                                </form>
+
+                                            </div>
+                                        </div><!-- /.modal-content -->
+                                    </div><!-- /.modal-dialog -->
+                                </div>
+
+
+{% endblock %}

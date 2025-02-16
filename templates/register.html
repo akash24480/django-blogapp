@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+    <section class="page-header">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-md-6">
+              <div class="page-title">
+                <h2>Register</h2>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="page-breadcrumb">
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Register</li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- page header end -->
+      <section class="contact-section">
+        <div class="container">
+          <div class="row no-gutters align-items-center">
+            <div class="col-md-6 col-lg-7">
+              <div class="contact-info">
+                <h3>Register</h3>
+                <p>Welcome to our blog app, where you can capture your thoughts, experiences, and ideas effortlessly. Sign up or log in to create and share your blogs, turning them into lasting memories. Whether it's a personal journal, a creative piece, or an insightful article, your blogs are securely stored, allowing you to revisit them anytime</p>
+                
+                <div class="circular-icons social-links">
+                  <ul>
+                    <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                    <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                    <li><a href="#"><i class="fab fa-pinterest-p"></i></a></li>
+                    <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-5">
+              <form class="contact-form" method="post">
+                {% csrf_token %}
+                <h3 class="text-center">Register</h3>
+                {% if messages %}
+                {% for message in messages %}
+                <p class="text-center" style="color: red;">{{ message }}</p>
+                {% endfor %}
+                {% endif %}
+
+                <div class="mt-5">
+                    <input type="name" name="username"  class="form-control" placeholder="Username" required>
+                <input type="email" name="email"  class="form-control" placeholder="Your Email" required>
+                <input type="password" name="password"  class="form-control" placeholder="Your Password" required>
+                <input type="password" name="confirm_password"  class="form-control" placeholder="Your Password" required>
+                </div>
+                <button class="btn btn-solid">Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+{% endblock %}
