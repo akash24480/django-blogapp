@@ -71,18 +71,12 @@ def blog_list(request):
 def create_blog(request):
     blogs = Blog.objects.filter(author = request.user).order_by('-created_at')
     if request.method == 'POST':
-        print("✅ User:", request.user)  # Debug user
-        print("✅ POST Data:", request.POST)  # Debugging POST data
-        print("✅ FILES Data:", request.FILES)  # Debugging FILES data
 
         title = request.POST.get('title')
         short_description = request.POST.get('short_description')
         content = request.POST.get('content')
         image = request.FILES.get('image') if 'image' in request.FILES else None
 
-        if not title or not short_description or not content:
-            print("❌ Missing data, not saving the blog!")
-            return render(request, 'create_blog.html', {'error': 'All fields are required!'})
 
         # Save blog
         blog = Blog.objects.create(
@@ -94,11 +88,42 @@ def create_blog(request):
         )
 
         messages.success(request, "Blog created successfully ✅")
-        print("✅ Blog Saved:", blog)  # Debugging
-
-        return render(request, 'dashboard/index.html', {'blogs': blogs}) # Ensure 'blog_index' is correct
+        return redirect('create_blog') # Ensure 'blog_index' is correct
 
     return render(request, 'dashboard/index.html', {'blogs': blogs})
 
 
+@login_required
+def update_blog(request, blog_id):
+    blog = get_object_or_404(Blog, id=blog_id)
 
+    if blog.author != request.user:
+        messages.error(request, "You are not the owner of this blog")
+        return redirect('create_blog')
+    if request.method == 'POST':
+        blog.title = request.POST.get('title')
+        blog.short_description = request.POST.get('short_description')
+        blog.content = request.POST.get('content')
+
+        if 'image' in request.FILES:
+            blog.image = request.FILES['image']
+        
+        blog.save()
+        messages.success(request, "Blog updated successfully ✅")
+        return redirect('create_blog')
+    
+    return render(request, 'dashboard/index.html', {'blog': blog})
+
+
+
+
+@login_required
+def delete_blog(request, blog_id):
+    blog = get_object_or_404(Blog, id=blog_id)
+     # Checking  if the logged-in user is the owner
+    if blog.author == request.user:
+        blog.delete()
+        messages.success(request, "Blog deleted successfully ✅")
+    else:
+        messages.error(request, "You are not the owner of this blog")
+    return redirect('create_blog')
